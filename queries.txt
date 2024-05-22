@@ -1,0 +1,503 @@
+1. Извличане на всички свойства на класа Book:
+PREFIX bko: <http://example.org/book/ontology#>
+PREFIX dbp: <http://dbpedia.org/property/>
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT DISTINCT ?property WHERE {
+    VALUES ?domainClass {
+        bko:Book dbo:Person
+    }
+    ?property rdfs:domain ?domainClass .
+}
+
+2. Извличане на съответните домейни:
+PREFIX bko: <http://example.org/book/ontology#>
+PREFIX dbp: <http://dbpedia.org/property/>
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT DISTINCT ?property ?domainClass WHERE {
+    VALUES ?domainClass {
+        bko:Book dbo:Person
+    }
+    ?property rdfs:domain ?domainClass .
+}
+
+ПРОСТИ ЗАЯВКИ ВЪРХУ ИНДИВИДИТЕ В БАЗАТА
+
+3. Извличане на всички автори, които са част от онтологията:
+PREFIX bko: <http://example.org/book/ontology#>
+PREFIX dbp: <http://dbpedia.org/property/>
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT DISTINCT ?authorName WHERE {
+    ?author a bko:Author ;
+    		dbp:name ?authorName .
+}
+
+4. Извеждане на националността на тези автори:
+PREFIX bko: <http://example.org/book/ontology#>
+PREFIX dbp: <http://dbpedia.org/property/>
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT DISTINCT ?authorName ?nationality WHERE {
+    ?author a bko:Author ;
+    		dbp:name ?authorName ;
+    		bko:nationality ?nationality .
+}
+
+5. Извеждане на всички произведения, чиито автори са българи:
+PREFIX bko: <http://example.org/book/ontology#>
+PREFIX dbp: <http://dbpedia.org/property/>
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT DISTINCT ?bookName ?authorName WHERE {
+    ?book a bko:Book .
+    ?book bko:hasAuthor ?author ;
+    	  dbp:title ?bookName .
+    ?author a bko:Author ;
+    		dbp:name ?authorName ;
+    		bko:nationality "Bulgaria" .
+}
+
+6. Извличане на всички произведения на даден автор - Ivan Vazov:
+PREFIX bko: <http://example.org/book/ontology#>
+PREFIX dbp: <http://dbpedia.org/property/>
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT DISTINCT ?bookName WHERE {
+    ?book a bko:Book .
+    ?book bko:hasAuthor ?author ;
+    	  dbp:title ?bookName .
+    ?author a bko:Author ;
+    		dbp:name "Ivan Vazov" .
+}
+
+7. Търсене на автора на конкретна книга - "Under the Yoke":
+PREFIX bko: <http://example.org/book/ontology#>
+PREFIX dbp: <http://dbpedia.org/property/>
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT ?authorName WHERE {
+    ?book a bko:Book .
+    ?book bko:hasAuthor ?author ;
+    	  dbp:title "Under the Yoke" .
+    ?author a bko:Author ;
+    		dbp:name ?authorName .
+}
+
+8. Извличане на информация за всички жанрове в нашата онтология:
+PREFIX bko: <http://example.org/book/ontology#>
+PREFIX dbp: <http://dbpedia.org/property/>
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT DISTINCT ?genreName WHERE {
+    ?book a bko:Book .
+    ?book bko:hasGenre ?genre .
+    ?genre dbp:name ?genreName .
+}
+
+9. Извличане на жанра на всички произведения в онтологията, които са написани от български автори:
+PREFIX bko: <http://example.org/book/ontology#>
+PREFIX dbp: <http://dbpedia.org/property/>
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT ?bookName ?authorName ?genreName WHERE {
+    ?book a bko:Book .
+    ?book bko:hasAuthor ?author ;
+    	  dbp:title ?bookName ;
+    	  bko:hasGenre ?genre .
+    ?genre dbp:name ?genreName .
+    ?author a bko:Author ;
+    		dbp:name ?authorName ;
+    		bko:nationality "Bulgaria" .
+}
+
+10. Извличане на всички произведения от даден жанр - poem:
+PREFIX bko: <http://example.org/book/ontology#>
+PREFIX dbp: <http://dbpedia.org/property/>
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT ?bookName ?genreName WHERE {
+    ?book a bko:Book .
+    ?book dbp:title ?bookName ;
+    	  bko:hasGenre ?genre .
+    ?genre dbp:name ?genreName .
+    FILTER(?genreName = "poem")
+}
+
+11. Извличане на информация за всички издателства, които са част от нашата онтология:
+PREFIX bko: <http://example.org/book/ontology#>
+PREFIX dbp: <http://dbpedia.org/property/>
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT DISTINCT ?publisherName WHERE {
+    ?book a bko:Book .
+    ?book bko:publishedBy ?publisher .
+    ?publisher dbp:name ?publisherName .
+}
+
+12. Извличане на информация за издателството на дадено произведение - "Under the Yoke":
+PREFIX bko: <http://example.org/book/ontology#>
+PREFIX dbp: <http://dbpedia.org/property/>
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT ?publisherName WHERE {
+    ?book a bko:Book .
+    ?book bko:publishedBy ?publisher ;
+    	  dbp:title "Under the Yoke" .
+    ?publisher dbp:name ?publisherName .
+}
+
+13. Извличане на информация за всички произведения, които са издадени от конкретно издателство - "Viking Press":
+PREFIX bko: <http://example.org/book/ontology#>
+PREFIX dbp: <http://dbpedia.org/property/>
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT ?bookName WHERE {
+    ?book a bko:Book .
+    ?book bko:publishedBy ?publisher ;
+    	  dbp:title ?bookName .
+    ?publisher dbp:name "Viking Press" .
+}
+
+14. Извличане на информация за годината на издаване на дадено произведение:
+PREFIX bko: <http://example.org/book/ontology#>
+PREFIX dbp: <http://dbpedia.org/property/>
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT ?bookName ?releaseDate WHERE {
+    ?book a bko:Book .
+    ?book dbp:title ?bookName ;
+    	  bko:releaseDate ?releaseDate .
+}
+
+15. Извличане на информация за броя на страниците на дадено произведение:
+PREFIX bko: <http://example.org/book/ontology#>
+PREFIX dbp: <http://dbpedia.org/property/>
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT ?bookName ?pages WHERE {
+    ?book a bko:Book .
+    ?book dbp:title ?bookName ;
+    	  bko:numberOfPages ?pages .
+}
+
+ОПЕРАЦИИ С МНОЖЕСТВА
+16. Операция UNION - всички произведения, които са или трилъри, или са написани от J. K. Rowling:
+PREFIX bko: <http://example.org/book/ontology#>
+PREFIX dbp: <http://dbpedia.org/property/>
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT ?bookName ?authorName ?genreName WHERE {
+    {
+        ?book a bko:Book .
+        ?book dbp:title ?bookName ;
+        	  bko:hasGenre ?genre ;
+        	  bko:hasAuthor ?author .
+        ?genre dbp:name ?genreName .
+        ?author dbp:name ?authorName .
+        FILTER(?genreName = "thriller")
+    }
+    UNION
+    {
+        ?book a bko:Book .
+        ?book dbp:title ?bookName ;
+        	  bko:hasGenre ?genre ;
+        	  bko:hasAuthor ?author .
+        ?genre dbp:name ?genreName .
+        ?author dbp:name ?authorName .
+        FILTER(?authorName = "J. K. Rowling") 
+    }
+}
+
+17. Операция MINUS - всички произведения, които са написани от J. K. Rowling, но ще премахнем тези, които са "crime fiction":
+PREFIX bko: <http://example.org/book/ontology#>
+PREFIX dbp: <http://dbpedia.org/property/>
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT ?bookName ?authorName ?genreName WHERE {
+    {
+        ?book a bko:Book .
+        ?book dbp:title ?bookName ;
+        	  bko:hasGenre ?genre ;
+        	  bko:hasAuthor ?author .
+        ?genre dbp:name ?genreName .
+        ?author dbp:name ?authorName .
+        FILTER(?authorName = "J. K. Rowling")
+    }
+    MINUS
+    {
+        ?book a bko:Book .
+        ?book dbp:title ?bookName ;
+        	  bko:hasGenre ?genre ;
+        	  bko:hasAuthor ?author .
+        ?genre dbp:name ?genreName .
+        ?author dbp:name ?authorName .
+        FILTER(?genreName = "crime fiction") 
+    }
+}
+
+ОТГОВАРЯНЕ НА ПО-СЛОЖНИ ВЪПРОСИ ЧРЕЗ FILTER
+18. Ще изведем всички произведения, които притежават следните характеристики:
+    a. Жанр - fantasy, young adult fiction, comedy
+    b. Автор - всички автори, освен тези от френски произход
+    c. Година на издаване - между 2000г. и 2024г.
+    d. Брой страници - между 360 и 520 страници
+    e. Издателство - без ограничения
+
+PREFIX bko: <http://example.org/book/ontology#>
+PREFIX dbp: <http://dbpedia.org/property/>
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT ?bookName ?authorName ?nationality ?genreName ?year ?pages WHERE {
+    BIND(YEAR(?releaseDate) as ?year)
+    ?book a bko:Book .
+    ?book dbp:title ?bookName ;
+    	  bko:hasGenre ?genre ;
+    	  bko:hasAuthor ?author ;
+    	  bko:releaseDate ?releaseDate ;
+    	  bko:numberOfPages ?pages .
+    ?genre dbp:name ?genreName .
+    ?author dbp:name ?authorName ;
+    		bko:nationality ?nationality .
+    FILTER(?genreName in ("fantasy", "young adult fiction", "comedy"))
+    FILTER(?nationality not in ("France"))
+    FILTER(?year >= 2000 && ?year <= 2024)
+    FILTER(?pages >= 360 && ?pages <= 520)
+}
+
+СЪЗДАВАНЕ НА НОВИ ПРОМЕНЛИВИ ЧРЕЗ BIND
+19. Преработване на горната заявка:
+PREFIX bko: <http://example.org/book/ontology#>
+PREFIX dbp: <http://dbpedia.org/property/>
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT ?bookName ?authorName ?nationality ?genreName ?year ?basedOnYear ?pages ?basedOnPages WHERE {
+    VALUES ?genres {"fantasy" "young adult fiction" "comedy"}
+    ?book a bko:Book .
+    ?book dbp:title ?bookName ;
+    	  bko:hasGenre ?genre ;
+    	  bko:hasAuthor ?author ;
+    	  bko:releaseDate ?releaseDate ;
+    	  bko:numberOfPages ?pages .
+    ?genre dbp:name ?genreName .
+    ?author dbp:name ?authorName ;
+    		bko:nationality ?nationality .
+    FILTER(?genreName in (?genres))
+    FILTER(?nationality not in ("France"))
+    FILTER(?year >= 2000 && ?year <= 2024)
+    FILTER(?pages >= 360 && ?pages <= 520)
+    BIND(YEAR(?releaseDate) as ?year)
+    BIND(IF(?year >= 2015, "New Book", "Old Book") as ?basedOnYear)
+    BIND(IF(?pages <= 150, "Short Length", IF(?pages <= 450, "Medium Length", "Long Length")) as ?basedOnPages)
+}
+
+20. Извличане на информация само за книги под 150 страници:
+PREFIX bko: <http://example.org/book/ontology#>
+PREFIX dbp: <http://dbpedia.org/property/>
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT ?bookName ?pages ?basedOnPages WHERE {
+    ?book a bko:Book .
+    ?book dbp:title ?bookName ;
+    	  bko:numberOfPages ?pages .
+    FILTER(?pages >= 0 && ?pages <= 150)
+    BIND(IF(?pages <= 150, "Short Length", IF(?pages <= 450, "Medium Length", "Long Length")) as ?basedOnPages)
+}
+
+21. Извличане на информация само за книги между 150 и 450 страници:
+PREFIX bko: <http://example.org/book/ontology#>
+PREFIX dbp: <http://dbpedia.org/property/>
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT ?bookName ?pages ?basedOnPages WHERE {
+    ?book a bko:Book .
+    ?book dbp:title ?bookName ;
+    	  bko:numberOfPages ?pages .
+    FILTER(?pages >= 151 && ?pages <= 450)
+    BIND(IF(?pages <= 150, "Short Length", IF(?pages <= 450, "Medium Length", "Long Length")) as ?basedOnPages)
+}
+
+22. Извличане на информация само за книги над 450 страници:
+PREFIX bko: <http://example.org/book/ontology#>
+PREFIX dbp: <http://dbpedia.org/property/>
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT ?bookName ?pages ?basedOnPages WHERE {
+    ?book a bko:Book .
+    ?book dbp:title ?bookName ;
+    	  bko:numberOfPages ?pages .
+    FILTER(?pages >= 450)
+    BIND(IF(?pages <= 150, "Short Length", IF(?pages <= 450, "Medium Length", "Long Length")) as ?basedOnPages)
+}
+
+AGGREGATION FUNCTIONS
+23. COUNT - колко автори има от всяка националност:
+PREFIX bko: <http://example.org/book/ontology#>
+PREFIX dbp: <http://dbpedia.org/property/>
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT DISTINCT ?nationality (COUNT(?author) as ?number) WHERE {
+    ?author a bko:Author ;
+    		bko:nationality ?nationality .
+}
+GROUP BY ?nationality
+
+24. COUNT - по колко произведения притежава всеки автор, който е от френски произход:
+PREFIX bko: <http://example.org/book/ontology#>
+PREFIX dbp: <http://dbpedia.org/property/>
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT DISTINCT ?authorName (COUNT(?book) as ?number) WHERE {
+    ?book a bko:Book .
+    ?book bko:hasAuthor ?author .
+    ?author bko:nationality "France" ;
+    		dbp:name ?authorName .
+}
+GROUP BY ?authorName
+
+25. COUNT - извличане на топ 3 на издателите, които имат най-много издадени книги:
+PREFIX bko: <http://example.org/book/ontology#>
+PREFIX dbp: <http://dbpedia.org/property/>
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT DISTINCT ?publisherName (COUNT(?book) as ?total_books) WHERE {
+    ?book a bko:Book .
+    ?book bko:publishedBy ?publisher .
+    ?publisher dbp:name ?publisherName .
+}
+GROUP BY ?publisherName
+ORDER BY DESC(?total_books)
+LIMIT 3
+
+26. SUM - общия брой страници на всички произведения на даден автор, който е от френски произход:
+PREFIX bko: <http://example.org/book/ontology#>
+PREFIX dbp: <http://dbpedia.org/property/>
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT DISTINCT ?authorName (SUM(?pages) as ?total_pages) WHERE {
+    ?book a bko:Book .
+    ?book bko:hasAuthor ?author ;
+    	  bko:numberOfPages ?pages .
+    ?author bko:nationality "France" ;
+    		dbp:name ?authorName .
+}
+GROUP BY ?authorName
+
+27. AVG - средната дължина на произведенията на всеки автор, който е от български произход:
+PREFIX bko: <http://example.org/book/ontology#>
+PREFIX dbp: <http://dbpedia.org/property/>
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT DISTINCT ?authorName (AVG(?pages) as ?avg_length) WHERE {
+    ?book a bko:Book .
+    ?book bko:hasAuthor ?author ;
+    	  bko:numberOfPages ?pages .
+    ?author bko:nationality "Bulgaria" ;
+    		dbp:name ?authorName .
+}
+GROUP BY ?authorName
+
+28. същото + добавяне на OPTIONAL функция:
+PREFIX bko: <http://example.org/book/ontology#>
+PREFIX dbp: <http://dbpedia.org/property/>
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT DISTINCT ?authorName (COUNT(?book) as ?total_books) (ROUND(AVG(?pages) * 100) / 100 as ?avg_length) WHERE {
+    ?book a bko:Book .
+    ?book bko:hasAuthor ?author .
+    ?author dbp:name ?authorName .
+    OPTIONAL {
+        ?book bko:numberOfPages ?pages .
+    }
+}
+GROUP BY ?authorName
+ORDER BY DESC(?total_books)
+
+29. MIN/MAX - максималната дължина на произведение на всеки автор, който е с английски произход:
+PREFIX bko: <http://example.org/book/ontology#>
+PREFIX dbp: <http://dbpedia.org/property/>
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT DISTINCT ?authorName (MAX(?pages) as ?longest) WHERE {
+    ?book a bko:Book .
+    ?book bko:hasAuthor ?author ;
+    	  bko:numberOfPages ?pages .
+    ?author bko:nationality "United Kingdom" ;
+    		dbp:name ?authorName .
+}
+GROUP BY ?authorName
+
+ЗАЯВКИ ЗА ЛОГИЧЕСКИ ИЗВОД
+30. Може би най-добрият начин да покажем как точно работи reasoning-ът в нашата онтология е 
+чрез извеждането на книгите, които са поредици. Всички книги, които са част от някаква поредица,
+притежават свойството followedBy, което „сочи“ към следващата книга в поредицата.
+*Да се пусне с и без reasoning*
+
+PREFIX bko: <http://example.org/book/ontology#>
+PREFIX dbp: <http://dbpedia.org/property/>
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT ?bookName ?followedByName WHERE {
+    ?book a bko:Book .
+    ?book dbp:title ?bookName ;
+    	  bko:followedBy ?followingBook .
+    ?followingBook dbp:title ?followedByName .
+}
+
+31. Сега да изберем една поредица – например “The Sea Serpent”, за да покажем по-нагледно 
+как работи reasoning-ът.
+*Да се пусне с и без reasoning*
+
+PREFIX bko: <http://example.org/book/ontology#>
+PREFIX dbp: <http://dbpedia.org/property/>
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT ?bookName ?followedByName WHERE {
+    ?book a bko:Book .
+    ?book dbp:title ?bookName ;
+    	  bko:followedBy ?followingBook .
+    FILTER(?bookName = "The Sea Serpent")
+    ?followingBook dbp:title ?followedByName .
+}
+
+PREFIX bko: <http://example.org/book/ontology#>
+PREFIX dbp: <http://dbpedia.org/property/>
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT ?bookName ?followedByName WHERE {
+    ?book a bko:Book .
+    ?book dbp:title ?bookName ;
+    	  bko:followedBy ?followingBook .
+    FILTER(?bookName = "The Kip Brothers")
+    ?followingBook dbp:title ?followedByName .
+}
+
+32. В нашите данни Author е подклас на класа Person. Следователно това също е още един 
+хубав пример, с който да покажем как работи reasoning-а. Ще разгледаме общо 4 случая:
+
+a. Използване на класа Person - да се пусне с и без reasoning:
+PREFIX bko: <http://example.org/book/ontology#>
+PREFIX dbp: <http://dbpedia.org/property/>
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT ?authorName ?bookName WHERE {
+    ?book a bko:Book .
+    ?book bko:hasAuthor ?author ;
+    	  dbp:title ?bookName .
+    ?author a dbo:Person ;
+    		dbp:name ?authorName .
+}
+
+b. Използване на класа Author - да се пусне с и без reasoning:
+PREFIX bko: <http://example.org/book/ontology#>
+PREFIX dbp: <http://dbpedia.org/property/>
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT ?authorName ?bookName WHERE {
+    ?book a bko:Book .
+    ?book bko:hasAuthor ?author ;
+    	  dbp:title ?bookName .
+    ?author a bko:Author ;
+    		dbp:name ?authorName .
+}
